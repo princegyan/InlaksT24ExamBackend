@@ -1,0 +1,188 @@
+{
+  "info": {
+    "name": "Inlaks T24 Backend - OCR Exam Comparison",
+    "description": "API collection for testing OCR-based exam question comparison system",
+    "version": "1.0.0"
+  },
+  "endpoints": [
+    {
+      "name": "Create Exam Code",
+      "method": "POST",
+      "url": "http://localhost:5000/api/exam/create",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "examCode": "TEMENOS_T24_001"
+      },
+      "description": "Create a new exam code for organizing questions"
+    },
+    {
+      "name": "List All Exam Codes",
+      "method": "GET",
+      "url": "http://localhost:5000/api/exam/list",
+      "description": "Retrieve all created exam codes with statistics"
+    },
+    {
+      "name": "Upload Question to Exam",
+      "method": "POST",
+      "url": "http://localhost:5000/api/exam/TEMENOS_T24_001/upload",
+      "headers": {
+        "Content-Type": "multipart/form-data"
+      },
+      "form-data": {
+        "image": "file (select image file)"
+      },
+      "description": "Upload a screenshot question. System will extract text, normalize it, and generate hash"
+    },
+    {
+      "name": "Get Questions for Exam Code",
+      "method": "GET",
+      "url": "http://localhost:5000/api/exam/TEMENOS_T24_001/questions",
+      "description": "Retrieve all questions stored for a specific exam code"
+    },
+    {
+      "name": "Compare Image (Dual Matching) ⭐",
+      "method": "POST",
+      "url": "http://localhost:5000/api/exam/compare",
+      "headers": {
+        "Content-Type": "multipart/form-data"
+      },
+      "form-data": {
+        "image": "file (select image file)"
+      },
+      "body_json": {
+        "textThreshold": 0.65,
+        "imageThreshold": 0.65
+      },
+      "description": "Upload image to compare against ALL stored questions. Returns matches verified by both TEXT and IMAGE similarity. This is the CORE endpoint."
+    },
+    {
+      "name": "Delete Question",
+      "method": "DELETE",
+      "url": "http://localhost:5000/api/exam/question/QUESTION_ID_HERE",
+      "description": "Remove a specific question from the database"
+    },
+    {
+      "name": "Get System Statistics",
+      "method": "GET",
+      "url": "http://localhost:5000/api/exam/stats",
+      "description": "Retrieve system-wide statistics (total exams, questions, breakdown)"
+    },
+    {
+      "name": "Health Check",
+      "method": "GET",
+      "url": "http://localhost:5000/health",
+      "description": "Verify server is running"
+    }
+  ],
+  "workflow": {
+    "description": "Recommended workflow for testing the system",
+    "steps": [
+      {
+        "step": 1,
+        "action": "Health Check",
+        "endpoint": "GET /health",
+        "note": "Verify server is running"
+      },
+      {
+        "step": 2,
+        "action": "Create Exam Codes",
+        "endpoint": "POST /api/exam/create",
+        "note": "Create 2-3 exam codes (e.g., TEMENOS_T24_001, TEMENOS_T24_002)"
+      },
+      {
+        "step": 3,
+        "action": "Upload Questions",
+        "endpoint": "POST /api/exam/:examCode/upload",
+        "note": "Upload 5-10 question screenshots to each exam code"
+      },
+      {
+        "step": 4,
+        "action": "Verify Uploads",
+        "endpoint": "GET /api/exam/:examCode/questions",
+        "note": "Check that questions were stored correctly"
+      },
+      {
+        "step": 5,
+        "action": "Test Comparison",
+        "endpoint": "POST /api/exam/compare",
+        "note": "Upload a question image from one of your exam codes and verify it matches correctly"
+      },
+      {
+        "step": 6,
+        "action": "Check Statistics",
+        "endpoint": "GET /api/exam/stats",
+        "note": "Verify system counters are accurate"
+      }
+    ]
+  },
+  "response_examples": {
+    "create_exam": {
+      "status": 201,
+      "body": {
+        "message": "Exam code created successfully",
+        "exam": {
+          "_id": "550e8400-e29b-41d4-a716-446655440000",
+          "examCode": "TEMENOS_T24_001",
+          "createdAt": "2026-01-26T10:00:00.000Z",
+          "questionCount": 0
+        }
+      }
+    },
+    "upload_question": {
+      "status": 201,
+      "body": {
+        "message": "Question uploaded and processed successfully",
+        "question": {
+          "_id": "550e8400-e29b-41d4-a716-446655440001",
+          "examCode": "TEMENOS_T24_001",
+          "imageUrl": "/uploads/1674745200000_123456789.jpg",
+          "extractedText": "What is the account balance in transaction processing?",
+          "uploadedAt": "2026-01-26T10:05:00.000Z"
+        }
+      }
+    },
+    "compare_success": {
+      "status": 200,
+      "body": {
+        "status": "SUCCESS",
+        "topMatch": {
+          "_id": "550e8400-e29b-41d4-a716-446655440001",
+          "examCode": "TEMENOS_T24_001",
+          "textSimilarityScore": 0.92,
+          "imageSimilarityScore": 0.88,
+          "matchedTextSnippet": "What is the account balance in transaction processing?",
+          "matchedImageUrl": "/uploads/1674745200000_123456789.jpg",
+          "confidence": "HIGH",
+          "combinedScore": 0.90
+        },
+        "report": {
+          "totalMatches": 3,
+          "highConfidenceMatches": 2,
+          "mediumConfidenceMatches": 1,
+          "lowConfidenceMatches": 0,
+          "examCodeBreakdown": {
+            "TEMENOS_T24_001": 2,
+            "TEMENOS_T24_002": 1
+          }
+        }
+      }
+    },
+    "compare_no_match": {
+      "status": 200,
+      "body": {
+        "status": "NO_CONFIRMED_MATCH",
+        "reason": "No matches found satisfying both text and image similarity thresholds",
+        "topMatch": null,
+        "report": {
+          "totalMatches": 0,
+          "highConfidenceMatches": 0,
+          "mediumConfidenceMatches": 0,
+          "lowConfidenceMatches": 0,
+          "examCodeBreakdown": {}
+        }
+      }
+    }
+  }
+}

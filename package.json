@@ -1,0 +1,34 @@
+{
+  "name": "inlaks-t24-backend",
+  "version": "1.0.0",
+  "description": "OCR-based exam question comparison system using Node.js, Express, and MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ocr",
+    "image-matching",
+    "text-similarity",
+    "mongodb",
+    "express"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongodb": "^6.21.0",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.0",
+    "tesseract.js": "^5.0.4",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
