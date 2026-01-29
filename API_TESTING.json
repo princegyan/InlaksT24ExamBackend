@@ -8,7 +8,7 @@
     {
       "name": "Create Exam Code",
       "method": "POST",
-      "url": "https://inlakst24exambackend.netlify.app/:5000/api/exam/create",
+      "url": "http://localhost:5000/api/exam/create",
       "headers": {
         "Content-Type": "application/json"
       },
@@ -20,13 +20,13 @@
     {
       "name": "List All Exam Codes",
       "method": "GET",
-      "url": "https://inlakst24exambackend.netlify.app/:5000/api/exam/list",
+      "url": "http://localhost:5000/api/exam/list",
       "description": "Retrieve all created exam codes with statistics"
     },
     {
       "name": "Upload Question to Exam",
       "method": "POST",
-      "url": "https://inlakst24exambackend.netlify.app/:5000/api/exam/TEMENOS_T24_001/upload",
+      "url": "http://localhost:5000/api/exam/TEMENOS_T24_001/upload",
       "headers": {
         "Content-Type": "multipart/form-data"
       },
@@ -38,13 +38,13 @@
     {
       "name": "Get Questions for Exam Code",
       "method": "GET",
-      "url": "https://inlakst24exambackend.netlify.app/:5000/api/exam/TEMENOS_T24_001/questions",
+      "url": "http://localhost:5000/api/exam/TEMENOS_T24_001/questions",
       "description": "Retrieve all questions stored for a specific exam code"
     },
     {
       "name": "Compare Image (Dual Matching) ⭐",
       "method": "POST",
-      "url": "https://inlakst24exambackend.netlify.app/:5000/api/exam/compare",
+      "url": "http://localhost:5000/api/exam/compare",
       "headers": {
         "Content-Type": "multipart/form-data"
       },
@@ -60,19 +60,19 @@
     {
       "name": "Delete Question",
       "method": "DELETE",
-      "url": "https://inlakst24exambackend.netlify.app/:5000/api/exam/question/QUESTION_ID_HERE",
+      "url": "http://localhost:5000/api/exam/question/QUESTION_ID_HERE",
       "description": "Remove a specific question from the database"
     },
     {
       "name": "Get System Statistics",
       "method": "GET",
-      "url": "https://inlakst24exambackend.netlify.app/:5000/api/exam/stats",
+      "url": "http://localhost:5000/api/exam/stats",
       "description": "Retrieve system-wide statistics (total exams, questions, breakdown)"
     },
     {
       "name": "Health Check",
       "method": "GET",
-      "url": "https://inlakst24exambackend.netlify.app/:5000/health",
+      "url": "http://localhost:5000/health",
       "description": "Verify server is running"
     }
   ],
